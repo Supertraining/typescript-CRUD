@@ -9,24 +9,25 @@ import { config } from "../config/config";
 import { GenericDatasourceImpl } from "../core/datasource/genericDatasourceImpl";
 import { CustomError } from "../core/errors/customError";
 import { GenericRoutesImpl } from "../core/routes/genericRoutesImpl";
-import { supabase } from "../db/supabase";
+import { SupabaseClient } from "../db/supabase/supabaseClient";
 import { AuthMiddleware } from "../middlewares/authMiddleware";
 
-const usersTable = config.supabase_users_table;
+const usersTable = config.supabase.users_table;
 
 if (!usersTable) {
   throw CustomError.internalError("Supabase users table is not defined");
 }
 
+const supabaseClient = new SupabaseClient(config.supabase.credentials).getClient();
 const datasource = new GenericDatasourceImpl<UserEntity, RegisterUserDto, UpdateUserDto>(
-  supabase,
+  supabaseClient,
   usersTable
 );
-const repository = new UserRepositoryImpl(datasource);
-const services = new ServiceImpl(repository);
-const controllers = new ControllerImpl(services);
+const userRepository = new UserRepositoryImpl(datasource);
+export const userServices = new ServiceImpl(userRepository);
+const userontrollers = new ControllerImpl(userServices);
 const router = Router();
-const userRouter = new GenericRoutesImpl(controllers, router);
+const userRouter = new GenericRoutesImpl(userontrollers, router);
 export const userRoutes = userRouter.routes({
   post: [AuthMiddleware.validateRole],
   delete: [AuthMiddleware.validateRole],

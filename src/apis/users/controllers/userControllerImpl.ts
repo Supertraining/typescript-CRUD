@@ -4,6 +4,9 @@ import { RegisterUserDto } from "../dtos/registerUserDto";
 import { CustomError } from "../../../core/errors/customError";
 import { IController, ICRUD } from "../../../core/interfaces/iCrud";
 import { UpdateUserDto } from "../dtos/updateUserDto";
+import { RAM } from "../../../core/utils/cacheHandler";
+import { RedisClient } from "../../../db/redis/redisClient";
+import { config } from "../../../config/config";
 
 export class ControllerImpl implements IController {
   constructor(private readonly service: ICRUD<UserEntity, RegisterUserDto, UpdateUserDto>) {}
@@ -20,8 +23,14 @@ export class ControllerImpl implements IController {
 
   getAll = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      res.json(await this.service.getAll());
+      // const users = await RAM.batchRequests("getAll", () => this.service.getAll(), 5000);
+      const redisClient = await new RedisClient({ ...config.redis, port: Number(config.redis.port) }).connect();
+      const cache = new RAM(redisClient);
+      const users = await cache.cacheRequests("getAll", () => this.service.getAll());
+
+      res.json(users);
     } catch (error) {
+
       next(error);
     }
   };

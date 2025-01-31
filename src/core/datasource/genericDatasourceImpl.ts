@@ -1,4 +1,3 @@
-import { supabase } from "../../db/supabase";
 import { DB_ERROR } from "../errors/DbErrors";
 import { ICRUD } from "../interfaces/iCrud";
 
