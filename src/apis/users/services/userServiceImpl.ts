@@ -4,7 +4,7 @@ import { ICRUD } from "../../../core/interfaces/iCrud";
 import { UpdateUserDto } from "../dtos/updateUserDto";
 import { PasswordHandler } from "../../../core/utils/passHandler";
 
-export class ServiceImpl implements ICRUD<UserEntity, RegisterUserDto, UpdateUserDto> {
+export class UserServiceImpl implements ICRUD<UserEntity, RegisterUserDto, UpdateUserDto> {
   constructor(
     private readonly repository: ICRUD<UserEntity, RegisterUserDto, UpdateUserDto>,
     private readonly hashPassword = PasswordHandler.hash

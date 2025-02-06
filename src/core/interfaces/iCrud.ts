@@ -1,6 +1,4 @@
-import { NextFunction, Request, Response } from "express";
-import { LoginUserDto } from "../../apis/users/dtos/loginUserDto";
-import { UserEntity } from "../../apis/users/entities/userEntity";
+import { NextFunction, Request, RequestHandler, Response } from "express";
 
 export interface ICRUD<T, U, V> {
   create(data: U): Promise<T>;
@@ -10,14 +8,11 @@ export interface ICRUD<T, U, V> {
   delete(id: string): Promise<T>;
 }
 
-export interface IController {
-  create(req: Request, res: Response, next: NextFunction): void;
-
-  getAll(req: Request, res: Response, next: NextFunction): void;
-
-  getById(req: Request, res: Response, next: NextFunction): void;
-
-  update(req: Request, res: Response, next: NextFunction): void;
-
-  delete(req: Request, res: Response, next: NextFunction): void;
+export interface IController extends Record<string, RequestHandler> {
+  create: RequestHandler;
+  getAll: RequestHandler;
+  getById: RequestHandler;
+  update: RequestHandler;
+  delete: RequestHandler;
 }
+

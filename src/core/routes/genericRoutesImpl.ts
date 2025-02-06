@@ -1,22 +1,33 @@
-import { Router } from "express";
-import { IController } from "../interfaces/iCrud";
-import { AuthMiddleware } from "../../middlewares/authMiddleware";
+import { RequestHandler, Router } from "express";
+import { CustomError } from "../errors/customError";
 
-export class GenericRoutesImpl {
-  constructor(private readonly controller: IController, private readonly router: Router) {}
+export class GenericRoutesImpl<T extends Record<string, RequestHandler>> {
+  constructor(private readonly controller: T, private readonly router: Router) {}
 
-  routes(middleware?: { get?: any; getById?: any; post?: any; put?: any; delete?: any }): Router {
-    const getMiddleware = middleware?.get;
-    const getByIdMiddleware = middleware?.getById;
-    const postMiddleware = middleware?.post;
-    const putMiddleware = middleware?.put;
-    const deleteMiddleware = middleware?.delete;
+  routes(
+    arg: {
+      method: Method;
+      path: string;
+      middlewares: RequestHandler[];
+      controller: keyof T;
+    }[]
+  ): Router {
+    const methods: Record<Method, any> = {
+      get: this.router.get.bind(this.router),
+      post: this.router.post.bind(this.router),
+      put: this.router.put.bind(this.router),
+      delete: this.router.delete.bind(this.router),
+    };
 
-    this.router.get("/", getMiddleware ? [middleware?.get] : [], this.controller.getAll);
-    this.router.get("/:id", getByIdMiddleware ? [middleware?.getById] : [], this.controller.getById);
-    this.router.post("/", postMiddleware ? [middleware?.post] : [], this.controller.create);
-    this.router.put("/:id", putMiddleware ? [middleware?.put] : [], this.controller.update);
-    this.router.delete("/:id", deleteMiddleware ? [middleware?.delete] : [], this.controller.delete);
+    arg.forEach(({ method, path, middlewares, controller }) => {
+      const handler = this.controller[controller]; 
+      
+      if (typeof handler !== "function") {
+        throw CustomError.internalError(`El controlador '${String(controller)}' no es una función.`);
+      }
+
+      methods[method](path, middlewares || [], handler.bind(this.controller));
+    });
 
     return this.router;
   }

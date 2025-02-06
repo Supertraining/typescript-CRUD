@@ -48,4 +48,8 @@ export class RAM {
 
     return await callback();
   }
+
+  async clearCache(cacheKey: string): Promise<void> {
+    await this.redisClient.del(cacheKey);
+  }
 }

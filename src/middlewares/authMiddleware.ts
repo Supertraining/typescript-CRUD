@@ -5,6 +5,7 @@ import { TokenHandler } from "../core/utils/tokenHandler";
 import { config } from "../config/config";
 import { ROLES } from "../constants/ROLES";
 import { userServices } from "../dependencies/userDependencies";
+import { IrequestWithUser } from "../core/interfaces/iRequestUser";
 
 export class AuthMiddleware {
   private static verifyToken = async (
@@ -41,7 +42,7 @@ export class AuthMiddleware {
 
       if (!user) throw CustomError.unauthorized(ERROR_MESSAGE.INVALID_TOKEN_USER_NOT_FOUND);
 
-      req.body.user = user;
+      (req as IrequestWithUser).user = user;
 
       next();
     } catch (error) {

@@ -17,7 +17,9 @@ export class GenericDatasourceImpl<T, U, V extends Partial<T>> implements ICRUD<
   }
 
   async getAll(): Promise<T[]> {
+    
     const { error, data } = await this.DB.from(this.table).select();
+    
     if (error) {
       throw DB_ERROR[error.code](error);
     }
