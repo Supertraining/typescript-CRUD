@@ -13,7 +13,7 @@ export class AppRoutes {
 
     router.use("/api/users", AuthMiddleware.validateJWT, ActiveRequestMiddleware.cancelExpensiveRequests, userRoutes);
     router.use("/api/auth/", authRoutes);
-    router.use("/api/getAsyncOps", cancelableAsyncOpsRoutes);
+    router.use("/api/getAsyncOps", AuthMiddleware.validateJWT, cancelableAsyncOpsRoutes);
 
     return router;
   }

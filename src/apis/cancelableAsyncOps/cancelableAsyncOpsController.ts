@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { ActiveRequestManager } from "../../core/utils/activeRequestHandler";
 import { CancelableAsyncOpService } from "./cancelableAsyncOpsService";
+import { IrequestWithUser } from "../../core/interfaces/iRequestUser";
 
 export class CancelableAsyncOpsController {
   constructor(private readonly service: CancelableAsyncOpService) {}
@@ -8,7 +9,7 @@ export class CancelableAsyncOpsController {
 
   getAsyncOperations = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const requestId = req.body.id;
+      const requestId = (req as IrequestWithUser).user.id;
 
       const activeRequests = ActiveRequestManager.getInstance();
 
