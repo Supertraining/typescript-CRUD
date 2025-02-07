@@ -8,8 +8,6 @@ export class ActiveRequestMiddleware {
       const activeResquest = ActiveRequestManager.getInstance();
       console.log((req as IrequestWithUser).user.id);
       
-      console.log("ACTIVE_REQ",activeResquest);
-      
       const requestId = (req as IrequestWithUser).user.id;
 
       if (activeResquest.has(requestId)) {
