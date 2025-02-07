@@ -1,5 +1,5 @@
 import { DB_ERROR } from "../errors/DbErrors";
-import { ICRUD } from "../interfaces/iCrud";
+import { ICRUD, ICustomGet } from "../interfaces/iCrud";
 
 export class GenericDatasourceImpl<T, U, V extends Partial<T>> implements ICRUD<T, U, V> {
   constructor(private readonly DB: any, private readonly table: string) {
@@ -17,9 +17,8 @@ export class GenericDatasourceImpl<T, U, V extends Partial<T>> implements ICRUD<
   }
 
   async getAll(): Promise<T[]> {
-    
     const { error, data } = await this.DB.from(this.table).select();
-    
+
     if (error) {
       throw DB_ERROR[error.code](error);
     }
@@ -57,5 +56,23 @@ export class GenericDatasourceImpl<T, U, V extends Partial<T>> implements ICRUD<
     }
 
     return data as T;
+  }
+
+  async customGet({ eqKey, eqValue, single }: ICustomGet): Promise<T[] | T> {
+    if (single) {
+      const { error, data } = await this.DB.from(this.table).select().eq(eqKey, eqValue).single();
+      if (error) {
+        throw DB_ERROR[error.code](error);
+      }
+
+      return data as T;
+    }
+
+    const { error, data } = await this.DB.from(this.table).select().eq(eqKey, eqValue);
+
+    if (error) {
+      throw DB_ERROR[error.code](error);
+    }
+    return data as T[];
   }
 }

@@ -6,6 +6,7 @@ export class AuthRoutes {
 
   routes(): Router {
     this.router.post("/login", this.controller.login);
+    this.router.post("/register", this.controller.register);
 
     return this.router;
   }

@@ -1,6 +1,6 @@
 import { UserEntity } from "../entities/userEntity";
 import { RegisterUserDto } from "../dtos/registerUserDto";
-import { ICRUD } from "../../../core/interfaces/iCrud";
+import { ICRUD, ICustomGet } from "../../../core/interfaces/iCrud";
 import { UpdateUserDto } from "../dtos/updateUserDto";
 import { PasswordHandler } from "../../../core/utils/passHandler";
 
@@ -12,7 +12,6 @@ export class UserServiceImpl implements ICRUD<UserEntity, RegisterUserDto, Updat
 
   async create(data: RegisterUserDto): Promise<UserEntity> {
     const hashedPassword = await this.hashPassword(data.password);
-
     return await this.repository.create({ ...data, password: hashedPassword });
   }
 
@@ -40,5 +39,9 @@ export class UserServiceImpl implements ICRUD<UserEntity, RegisterUserDto, Updat
 
   async delete(id: string): Promise<UserEntity> {
     return await this.repository.delete(id);
+  }
+
+  async customGet({ eqKey, eqValue, single }: ICustomGet): Promise<UserEntity[] | UserEntity> {
+    return await this.repository.customGet({ eqKey, eqValue, single });
   }
 }

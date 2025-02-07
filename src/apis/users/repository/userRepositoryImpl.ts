@@ -1,6 +1,6 @@
 import { ERROR_MESSAGE } from "../../../constants/ERROR_MESSGS";
 import { CustomError } from "../../../core/errors/customError";
-import { ICRUD } from "../../../core/interfaces/iCrud";
+import { ICRUD, ICustomGet } from "../../../core/interfaces/iCrud";
 import { RegisterUserDto } from "../dtos/registerUserDto";
 import { UpdateUserDto } from "../dtos/updateUserDto";
 import { UserEntity } from "../entities/userEntity";
@@ -42,5 +42,8 @@ export class UserRepositoryImpl implements ICRUD<UserEntity, RegisterUserDto, Up
   async delete(id: string): Promise<UserEntity> {
     return await this.genericRepository.delete(id);
   }
- 
+
+  async customGet({ eqKey, eqValue, single }: ICustomGet): Promise<UserEntity[] | UserEntity> {
+    return await this.genericRepository.customGet({eqKey, eqValue, single});
+  }
 }

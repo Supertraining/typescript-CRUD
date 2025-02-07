@@ -11,15 +11,6 @@ import { config } from "../../../config/config";
 export class ControllerImpl implements IController {
   constructor(private readonly service: ICRUD<UserEntity, RegisterUserDto, UpdateUserDto>) {}
   [index: string]: any;
-  create = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    try {
-      const registerUserDto: RegisterUserDto = RegisterUserDto.create(req.body);
-
-      res.json(await this.service.create(registerUserDto!));
-    } catch (error) {
-      next(error);
-    }
-  };
 
   getAll = async (req: Request, res: Response, next: NextFunction) => {
     try {

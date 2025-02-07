@@ -1,18 +1,15 @@
 import { NextFunction, Request, Response } from "express";
 import { LoginUserDto } from "../../users/dtos/loginUserDto";
-import { UserEntity } from "../../users/entities/userEntity";
+import { RegisterUserDto } from "../../users/dtos/registerUserDto";
 
 export interface IAuthController {
   login(req: Request, res: Response, next: NextFunction): void;
-}
-
-export interface IAuthRepository {
-  getByEmail(email: string): Promise<UserEntity>;
+  register(req: Request, res: Response, next: NextFunction): void;
 }
 
 export interface IAuthService {
   login(data: LoginUserDto): Promise<IAuthToken>;
-  getByEmail(email: string): Promise<UserEntity>;
+  register(data: RegisterUserDto): Promise<IAuthToken>;
 }
 
 export interface IAuthToken {

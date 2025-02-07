@@ -15,12 +15,6 @@ export const customUserRoutes: IGenericRoutes[] = [
     controller: "getById",
   },
   {
-    method: "post",
-    path: "/",
-    middlewares: [AuthMiddleware.validateRole],
-    controller: "create",
-  },
-  {
     method: "put",
     path: "/",
     middlewares: [AuthMiddleware.validateRole],
