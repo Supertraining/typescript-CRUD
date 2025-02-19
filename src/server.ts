@@ -33,7 +33,7 @@ export class Server {
     this.app.use(this.errorHandler);
     this.app.use(this.notFoundHandler);
     this.app.listen(this.port);
-    console.log(`Server running on port ${this.port}`);
+    console.log(`Server running on port ${this.port} process ${process.pid}`);
     // populateDB();
   }
 }

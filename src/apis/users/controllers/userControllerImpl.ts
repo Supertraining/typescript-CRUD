@@ -4,11 +4,17 @@ import { RegisterUserDto } from "../dtos/registerUserDto";
 import { CustomError } from "../../../core/errors/customError";
 import { IController, ICRUD } from "../../../core/interfaces/iCrud";
 import { UpdateUserDto } from "../dtos/updateUserDto";
-import { RAM } from "../../../core/utils/cacheHandler";
+import { CacheHandler } from "../../../core/utils/cacheHandler";
 import { RedisClient } from "../../../db/redis/redisClient";
 import { config } from "../../../config/config";
+import { WorkerPool } from "../../../core/utils/workersPool";
+import path from "path";
+import { WorkersPoolSize } from "../../../core/enums/workersPoolSize";
 
-export class ControllerImpl implements IController {
+const workerFilePath = path.resolve(__dirname, "../workers/userWorker.js");
+const workerPool = new WorkerPool(workerFilePath, WorkersPoolSize.ONE);
+
+export class UserControllerImpl implements IController {
   constructor(private readonly service: ICRUD<UserEntity, RegisterUserDto, UpdateUserDto>) {}
   [index: string]: any;
 
@@ -20,9 +26,19 @@ export class ControllerImpl implements IController {
         ...config.redis,
         port: Number(config.redis.port),
       }).connect();
-      const cache = new RAM(redisClient);
+      const cache = new CacheHandler(redisClient);
       const users = await cache.cacheRequests("getAll", () => this.service.getAll());
 
+      res.json(users);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  getAllWithWorker = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      console.log("📢 Enviando solicitud al WorkerPool para getAll"); // ✅ Log cuando se llama al Worker
+      const users = await workerPool.executeTask({ action: "getAll" });
       res.json(users);
     } catch (error) {
       next(error);

@@ -10,8 +10,14 @@ export const customUserRoutes: IGenericRoutes[] = [
   },
   {
     method: "get",
+    path: "/all/workers",
+    middlewares: [],
+    controller: "getAllWithWorker",
+  },
+  {
+    method: "get",
     path: "/:id",
-    middlewares: [AuthMiddleware.validateRole],
+    middlewares: [],
     controller: "getById",
   },
   {

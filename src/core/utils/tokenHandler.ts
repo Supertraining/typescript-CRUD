@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken";
+import jwt,  { Secret, SignOptions } from "jsonwebtoken";
 import { config } from "../../config/config";
 import { CustomError } from "../errors/customError";
 import { ERROR_MESSAGE } from "../../constants/ERROR_MESSGS";
@@ -6,13 +6,13 @@ import { ERROR_MESSAGE } from "../../constants/ERROR_MESSGS";
 export class TokenHandler {
   static async generate(
     payload: Record<string, any>,
-    duration: string = "2h"
+    duration: SignOptions["expiresIn"]
   ): Promise<string | null> {
     return new Promise((resolve) => {
       if (!config.jwt_secret) throw CustomError.internalError(ERROR_MESSAGE.JWT_SECRET_NOT_DEFINED);
-      jwt.sign(payload, config.jwt_secret, { expiresIn: duration }, (err, token) => {
-        if (err) return resolve(null);
 
+      jwt.sign(payload, config.jwt_secret as Secret, { expiresIn: duration }, (err, token) => {
+        if (err) return resolve(null);
         return resolve(token!);
       });
     });

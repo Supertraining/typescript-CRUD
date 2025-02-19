@@ -8,7 +8,7 @@ export class GenericDatasourceImpl<T, U, V extends Partial<T>> implements ICRUD<
   }
   async create(data: U): Promise<T> {
     const { error, data: registry } = await this.DB.from(this.table).insert(data).select().single();
-
+    
     if (error) {
       throw DB_ERROR[error.code](error);
     }

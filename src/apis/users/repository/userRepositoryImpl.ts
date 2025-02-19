@@ -8,7 +8,7 @@ import { UserMapper } from "../entities/userMapper";
 
 export class UserRepositoryImpl implements ICRUD<UserEntity, RegisterUserDto, UpdateUserDto> {
   constructor(
-    private readonly genericRepository: ICRUD<UserEntity, RegisterUserDto, UpdateUserDto>
+    private readonly genericRepository: ICRUD<UserEntity, RegisterUserDto, UpdateUserDto>  
   ) {}
   async create(data: RegisterUserDto): Promise<UserEntity> {
     const newUser = await this.genericRepository.create(data);

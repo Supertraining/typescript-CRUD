@@ -9,6 +9,7 @@ export class UserServiceImpl implements ICRUD<UserEntity, RegisterUserDto, Updat
     private readonly repository: ICRUD<UserEntity, RegisterUserDto, UpdateUserDto>,
     private readonly hashPassword = PasswordHandler.hash
   ) {}
+  [index: string]: any;
 
   async create(data: RegisterUserDto): Promise<UserEntity> {
     const hashedPassword = await this.hashPassword(data.password);

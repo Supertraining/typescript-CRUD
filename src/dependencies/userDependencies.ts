@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { ControllerImpl } from "../apis/users/controllers/userControllerImpl";
+import { UserControllerImpl } from "../apis/users/controllers/userControllerImpl";
 import { RegisterUserDto } from "../apis/users/dtos/registerUserDto";
 import { UpdateUserDto } from "../apis/users/dtos/updateUserDto";
 import { UserEntity } from "../apis/users/entities/userEntity";
@@ -26,7 +26,7 @@ const datasource = new GenericDatasourceImpl<UserEntity, RegisterUserDto, Update
 );
 const userRepository = new UserRepositoryImpl(datasource);
 export const userServices = new UserServiceImpl(userRepository);
-const userControllers = new ControllerImpl(userServices);
+const userControllers = new UserControllerImpl(userServices);
 const router = Router();
 const userRouter = new GenericRoutesImpl<IController>(userControllers, router);
 

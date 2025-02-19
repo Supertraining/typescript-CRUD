@@ -6,7 +6,6 @@ export class ActiveRequestMiddleware {
   static cancelExpensiveRequests(req: Request, res: Response, next: NextFunction) {
     try {
       const activeResquest = ActiveRequestManager.getInstance();
-      console.log((req as IrequestWithUser).user.id);
       
       const requestId = (req as IrequestWithUser).user.id;
 

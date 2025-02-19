@@ -29,15 +29,9 @@ export const ERROR_MESSAGE = Object.freeze({
   ENV_VARIABLES_NOT_CONFIGURED: "Environment variables not configured",
   ACCESS_DENIED: "Access denied",
   API_KEY_NOT_FOUND: "API key not found",
-  INVALID_API_KEY: "Invalid API key", 
+  INVALID_API_KEY: "Invalid API key",
   MULTIPLE_USERS_FOUND: "Unexpected multiple users found",
+  MULTIPLE_PDFS_FOUND: "Unexpected multiple pdfs found",
   SINGLE_USER_FOUND: "Unexpected single user found",
-});
-
-export const ENTITIES_ERRORS = Object.freeze({
-  MISSING_ID: "Missing ID at user entity",
-  MISSING_FULLNAME: "Missing fullname at user entity",
-  MISSING_EMAIL: "Missing email at user entity",
-  MISSING_PASSWORD: "Missing password at user entity",
-  MISSING_ROLES: "Missing roles at user entity",
+  SINGLE_PDF_FOUND: "Unexpected single pdf found",
 });

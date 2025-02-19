@@ -1,6 +1,6 @@
 import { CustomError } from "../errors/customError";
 
-export class RAM {
+export class CacheHandler {
   private static runningRequests: Map<string, Promise<any>> = new Map();
 
   constructor(private readonly redisClient: any) {}
@@ -36,9 +36,7 @@ export class RAM {
   }
 
   async cacheRequests(cacheKey: string, callback: () => Promise<any>): Promise<any> {
-    
     const cachedResponse = await this.redisClient.get(cacheKey);
-
 
     if (cachedResponse) {
       return JSON.parse(cachedResponse);
