@@ -1,5 +1,5 @@
 import express, { Router } from "express";
-import { populateDB } from "../playground";
+import { populateDB } from "../playground.js";
 
 interface Options {
   port?: number;

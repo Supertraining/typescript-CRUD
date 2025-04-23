@@ -1,11 +1,11 @@
 import { Router } from "express";
-import { Server } from "../server";
-import { userRoutes } from "../dependencies/userDependencies";
-import { authRoutes } from "../dependencies/authDependencies";
-import { AuthMiddleware } from "../middlewares/authMiddleware";
-import { ActiveRequestMiddleware } from "../middlewares/activeRequestMiddleware";
-import { cancelableAsyncOpsRoutes } from "../dependencies/cancelableAsyncOpsDependencies";
-import { pdfRoutes } from "../dependencies/pdfDependencies";
+import { Server } from "../server.js";
+import { userRoutes } from "../dependencies/user.dependencies.js";
+import { authRoutes } from "../dependencies/auth.dependencies.js";
+import { AuthMiddleware } from "../middlewares/auth-middleware.middlewares.js";
+import { ActiveRequestMiddleware } from "../middlewares/active-request-middleware.middlewares.js";
+import { cancelableAsyncOpsRoutes } from "../dependencies/cancelable-async-ops.dependencies.js";
+import { pdfRoutes } from "../dependencies/pdf.dependencies.js";
 
 export class AppRoutes {
   static get routes(): Router {
@@ -18,7 +18,7 @@ export class AppRoutes {
       userRoutes
     );
     router.use("/api/auth/", authRoutes);
-    router.use("/api/getAsyncOps", AuthMiddleware.validateJWT, cancelableAsyncOpsRoutes);
+    router.use("/api/async-operations/", AuthMiddleware.validateJWT, cancelableAsyncOpsRoutes);
     router.use("/api/pdf", AuthMiddleware.validateJWT, pdfRoutes);
 
     return router;

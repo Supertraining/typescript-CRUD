@@ -1,36 +1,37 @@
-import { Server } from "./src/server";
+import { Server } from "./src/server.js";
 import cors from "cors";
 import helmet from "helmet";
-import { AppRoutes } from "./src/routes/routes";
-import { ErrorHandler } from "./src/core/errors/errorHandler";
-import { AuthMiddleware } from "./src/middlewares/authMiddleware";
+import { AppRoutes } from "./src/routes/routes.js";
+import { ErrorHandler } from "./src/core/errors/error-handler.core.errors.js";
+import { AuthMiddleware } from "./src/middlewares/auth-middleware.middlewares.js";
 import cluster from "cluster";
-import { cpus } from "os";
+import { availableParallelism } from "os";
 
-(async () => {
-  if (cluster.isPrimary) {
-    console.log(`Master ${process.pid} is running`);
-    console.log(cpus().length);
+if (cluster.isPrimary) {
+  console.log(`👑 Master ${process.pid} is running`);
+  const cpuCount = availableParallelism();
+  console.log(`Available CPUs: ${cpuCount}`);
 
-    cpus().forEach(() => cluster.fork());
-    cluster.on("exit", (worker, code, signal) => {
-      console.log(`Worker ${worker.process.pid} murió con código ${code}, reiniciando...`);
-      cluster.fork();
-    });
-  } else {
+  for (let i = 0; i < 1; i++) {
+    cluster.fork();
+  }
+
+  cluster.on("exit", (worker, code, signal) => {
+    console.log(`🔁 Worker ${worker.process.pid} died with code ${code}, restarting...`);
+    cluster.fork();
+  });
+} else {
+  console.log(`👨‍💻 Worker ${process.pid} started`);
+  (async () => {
+    // Configuración del server
     const router = AppRoutes.routes;
     const server = new Server({
       port: 3100,
       routes: router,
       errorHandler: ErrorHandler.errorHandler,
       middlewares: [
-        Server.express.json({
-          limit: "50mb",
-        }),
-        Server.express.urlencoded({
-          limit: "50mb",
-          extended: true,
-        }),
+        Server.express.json({ limit: "50mb" }),
+        Server.express.urlencoded({ limit: "50mb", extended: true }),
         AuthMiddleware.validateApiKey,
         cors(),
         helmet(),
@@ -39,7 +40,6 @@ import { cpus } from "os";
         res.status(404).json({ error: "Not Found" });
       },
     });
-
     await server.start();
-  }
-})();
+  })();
+}
