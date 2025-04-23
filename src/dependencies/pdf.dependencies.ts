@@ -8,7 +8,7 @@ import { WorkerPool } from "../core/utils/worker-pool.core.utils.js";
 import { WorkersPoolSize } from "../core/enums/workerspool-size.core.enums.js";
 
 const __dirname =
-  import.meta.url.split("/").slice(10, -2).join("/") + "/modules/pdf/workers/pdfWorker.js";
+  import.meta.url.split("/").slice(10, -2).join("/") + "/modules/pdf/workers/pdf-worker.workers.js";
 const workerFilePath = path.resolve(__dirname);
 
 const workerPool = new WorkerPool(workerFilePath, WorkersPoolSize.TWO);

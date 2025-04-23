@@ -31,7 +31,7 @@ const passwordHandler = new PasswordHandler();
 const cacheHandler = await CacheHandler.getInstance(() => redisClientPromise);
 
 const __dirname =
-  import.meta.url.split("/").slice(10, -2).join("/") + "/modules/users/workers/userWorker.js";
+  import.meta.url.split("/").slice(10, -2).join("/") + "/modules/users/workers/user-worker.workers.js";
 
 const workerFilePath = path.resolve(__dirname);
 
