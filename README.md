@@ -1,3 +1,5 @@
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/Supertraining/typescript-CRUD)
+
 # TypeScript CRUD API 🚀
 
 A scalable and modular CRUD API built with **TypeScript**, **Express.js**, and **Supabase**. Features user management, authentication, PDF generation, and cancelable async operations.
